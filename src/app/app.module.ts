@@ -4,6 +4,8 @@ import {BrowserModule} from '@angular/platform-browser';
 import {AppComponent} from './app.component';
 import {CustomersListComponent} from './component/customers-list/customers-list.component';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {CoreModule} from "./core/core.module";
+import {HttpClientModule} from "@angular/common/http";
 
 @NgModule({
   declarations: [
@@ -11,9 +13,11 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
     CustomersListComponent,
   ],
   imports: [
+    CoreModule,
     BrowserModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

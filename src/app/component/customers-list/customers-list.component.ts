@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {UserService} from "../../core/services/user.service";
 
 @Component({
   selector: 'app-customers-list',
@@ -7,8 +8,16 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
   styleUrls: ['./customers-list.component.scss']
 })
 export class CustomersListComponent implements OnInit {
-  addNewCustomer: boolean = false;
-  customers: { Firstname: string, Lastname: string, PhoneNumber: string, Email: string, BankAccountNumber: string, year: string, month: string, day: string }[] = [];
+  customers: {
+    firstName: string,
+    lastName: string,
+    age: string,
+    gender: string,
+    email: string,
+    phone: string,
+    eyeColor: string,
+    birthdate: string
+  }[] = [];
   myForm!: FormGroup;
   editMode: boolean = false;
   selectedItemIndex!: number;
@@ -16,16 +25,16 @@ export class CustomersListComponent implements OnInit {
   duplicateInfo: boolean = false;
 
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder,
+              private userService: UserService
+  ) {
   }
 
   ngOnInit(): void {
-    if (localStorage.getItem('customers'))
-      this.customers = this.customers.concat(JSON.parse(<string>localStorage.getItem('customers')));
+    this.userService.get().subscribe((res: any) => {
+      this.customers = this.customers.concat(res.users);
+    });
 
-    if (!this.customers.length) {
-      this.addNewCustomer = true;
-    }
 
     let phoneNumberRegex = /^(\d{1,3}[- ]?)?\d{10}$/;
     let bankAccountNumberRegex = /^\d{9,18}$/;
@@ -44,7 +53,6 @@ export class CustomersListComponent implements OnInit {
   }
 
   cancel() {
-    this.addNewCustomer = false;
     this.myForm.reset();
     this.editMode = false;
     this.duplicateEmail = false;
@@ -55,15 +63,11 @@ export class CustomersListComponent implements OnInit {
     this.editMode = true;
     this.selectedItemIndex = this.customers.findIndex((item: any) => item.Email === email);
     this.myForm.patchValue(this.customers[this.selectedItemIndex]);
-    this.addNewCustomer = true;
   }
 
   delete(email: string) {
     this.customers.splice(this.customers.findIndex((item: any) => item.Email === email), 1);
     localStorage.setItem('customers', JSON.stringify(this.customers));
-
-    if (!this.customers.length)
-      this.addNewCustomer = true;
   }
 
   submit() {
@@ -74,7 +78,7 @@ export class CustomersListComponent implements OnInit {
     let model = this.myForm.value
 
     if (this.editMode) {
-      let customersWithOutSelectedItem = this.customers.filter((item: any) => item.Email !== this.customers[this.selectedItemIndex].Email);
+      let customersWithOutSelectedItem = this.customers.filter((item: any) => item.Email !== this.customers[this.selectedItemIndex].email);
       customersWithOutSelectedItem.map((item: any) => {
         if (item.Email === model.Email) {
           this.duplicateEmail = true;
@@ -92,7 +96,6 @@ export class CustomersListComponent implements OnInit {
       if (!this.duplicateEmail && !this.duplicateInfo) {
         this.customers[this.selectedItemIndex] = model;
         localStorage.setItem('customers', JSON.stringify(this.customers));
-        this.addNewCustomer = false;
         this.editMode = false;
         this.myForm.reset();
       }
@@ -115,7 +118,6 @@ export class CustomersListComponent implements OnInit {
     if (!this.duplicateInfo && !this.duplicateEmail) {
       this.customers.push(model);
       localStorage.setItem('customers', JSON.stringify(this.customers));
-      this.addNewCustomer = false;
       this.myForm.reset();
     }
   }

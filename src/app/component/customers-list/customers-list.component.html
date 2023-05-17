@@ -1,98 +1,39 @@
 <div class="parent">
-  <div data-test="component-container" class="component-container">
-    <ng-container *ngIf="!addNewCustomer">
+  <div data-test="component-container" class="component-container" *ngIf="customers.length">
+    <ng-container>
       <div class="table-container">
         <table data-test="table-customer">
           <thead>
           <tr>
-            <th>Firstname</th>
-            <th>Lastname</th>
-            <th>DateOfBirth</th>
-            <th>PhoneNumber</th>
-            <th>Email</th>
-            <th>BankAccountNumber</th>
+            <th>firstName</th>
+            <th>lastName</th>
+            <th>age</th>
+            <th>gender</th>
+            <th>email</th>
+            <th>phone</th>
+            <th>eyeColor</th>
+            <th>birthdate</th>
             <th></th>
           </tr>
           </thead>
           <tbody>
           <tr *ngFor="let item of customers">
-            <td>{{item?.Firstname}}</td>
-            <td>{{item?.Lastname}}</td>
-            <td>{{item?.year}}-{{item?.month}}-{{item?.day}}</td>
-            <td>{{item?.PhoneNumber}}</td>
-            <td>{{item?.Email}}</td>
-            <td>{{item?.BankAccountNumber}}</td>
+            <td>{{item?.firstName}}</td>
+            <td>{{item?.lastName}}</td>
+            <td>{{item?.age}}</td>
+            <td>{{item?.gender}}</td>
+            <td>{{item?.email}}</td>
+            <td>{{item?.phone}}</td>
+            <td>{{item?.eyeColor}}</td>
+            <td>{{item?.birthdate}}</td>
             <td class="action">
-              <img src="assets/icons/recycle.svg" alt="" width="25" height="25" (click)="delete(item.Email)">
-              <img src="assets/icons/edit.svg" alt="" width="25" height="25" (click)="edit(item.Email)">
+              <img src="assets/icons/recycle.svg" alt="" width="25" height="25" (click)="delete(item.email)">
+              <img src="assets/icons/edit.svg" alt="" width="25" height="25" (click)="edit(item.email)">
             </td>
           </tr>
           </tbody>
         </table>
       </div>
-      <div data-test="new-customer" class="new-customer">
-        <button (click)="addNewCustomer = true">Add new</button>
-      </div>
-    </ng-container>
-    <ng-container *ngIf="addNewCustomer">
-      <form class="add-new-customer-container" [formGroup]="myForm" (ngSubmit)="submit()">
-        <h3 *ngIf="!customers.length">Please create a customer</h3>
-        <div>
-          <label>Firstname</label>
-          <input
-            [ngClass]="{ 'is-invalid': myForm.controls['Firstname'].invalid}" placeholder="Firstname"
-            formControlName="Firstname" (keydown.enter)="submit()" autofocus/>
-        </div>
-        <div>
-          <label>Lastname</label>
-          <input
-            [ngClass]="{ 'is-invalid': myForm.controls['Lastname'].invalid}" placeholder="Lastname"
-            formControlName="Lastname" (keydown.enter)="submit()"/>
-        </div>
-        <div>
-          <label>DateOfBirth</label>
-          <div class="date-inputs">
-            <input
-              [ngClass]="{ 'is-invalid': myForm.controls['year'].invalid}" placeholder="Year" formControlName="year"
-              type="number" (keydown.enter)="submit()"/>
-            <input
-              [ngClass]="{ 'is-invalid': myForm.controls['month'].invalid}" placeholder="Month" formControlName="month"
-              type="number" (keydown.enter)="submit()"/>
-            <input
-              [ngClass]="{ 'is-invalid': myForm.controls['day'].invalid}" placeholder="Day" formControlName="day"
-              type="number" (keydown.enter)="submit()"/>
-          </div>
-        </div>
-        <div>
-          <label>PhoneNumber</label>
-          <input
-            [ngClass]="{ 'is-invalid': myForm.controls['PhoneNumber'].invalid}" placeholder="PhoneNumber"
-            formControlName="PhoneNumber" (keydown.enter)="submit()"/>
-        </div>
-        <div>
-          <label>Email</label>
-          <input
-            [ngClass]="{ 'is-invalid': myForm.controls['Email'].invalid}" placeholder="Email" formControlName="Email"
-            type="email" (keydown.enter)="submit()"/>
-        </div>
-        <div>
-          <label>BankAccountNumber</label>
-          <input
-            [ngClass]="{ 'is-invalid': myForm.controls['BankAccountNumber'].invalid}" placeholder="BankAccountNumber"
-            formControlName="BankAccountNumber" type="number" (keydown.enter)="submit()"/>
-        </div>
-        <div data-test="new-customer" class="new-customer">
-          <button class="cancel" type="button" (click)="cancel()" *ngIf="customers.length">Cancel</button>
-          <button class="create" type="submit" *ngIf="!editMode">Create</button>
-          <button class="create" type="button" (click)="submit()" *ngIf="editMode">Update</button>
-        </div>
-        <div class="errors" *ngIf="duplicateEmail">
-          There is a customer with this email!
-        </div>
-        <div class="errors" *ngIf="duplicateInfo">
-          There is a customer with this information (Duplicate customer error)!
-        </div>
-      </form>
     </ng-container>
   </div>
 </div>
