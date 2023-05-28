@@ -1,6 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup} from "@angular/forms";
 import {UserService} from "../../core/services/user.service";
+import {select, Store} from "@ngrx/store";
+import {getUser} from "../../store/actions";
+import {User} from '../../store/reducers';
+import {Observable} from "rxjs";
 
 @Component({
   selector: 'app-customers-list',
@@ -8,16 +12,7 @@ import {UserService} from "../../core/services/user.service";
   styleUrls: ['./customers-list.component.scss']
 })
 export class CustomersListComponent implements OnInit {
-  customers: {
-    firstName: string,
-    lastName: string,
-    age: string,
-    gender: string,
-    email: string,
-    phone: string,
-    eyeColor: string,
-    birthdate: string
-  }[] = [];
+  customers!: Observable<User> | any;
   myForm!: FormGroup;
   editMode: boolean = false;
   selectedItemIndex!: number;
@@ -26,30 +21,15 @@ export class CustomersListComponent implements OnInit {
 
 
   constructor(private fb: FormBuilder,
-              private userService: UserService
+              private userService: UserService,
+              private store: Store<User>
   ) {
   }
 
+
   ngOnInit(): void {
-    this.userService.get().subscribe((res: any) => {
-      this.customers = this.customers.concat(res.users);
-    });
-
-
-    let phoneNumberRegex = /^(\d{1,3}[- ]?)?\d{10}$/;
-    let bankAccountNumberRegex = /^\d{9,18}$/;
-    let emailRegex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
-
-    this.myForm = this.fb.group({
-      Firstname: ['', Validators.required],
-      Lastname: ['', Validators.required],
-      PhoneNumber: ['', [Validators.pattern(phoneNumberRegex), Validators.required]],
-      Email: ['', [Validators.pattern(emailRegex), Validators.required]],
-      BankAccountNumber: ['', [Validators.pattern(bankAccountNumberRegex), Validators.required]],
-      year: ['', Validators.required],
-      month: ['', [Validators.required, Validators.max(12)]],
-      day: ['', [Validators.required, Validators.max(31)]],
-    });
+    this.store.dispatch({type: getUser.type});
+    this.customers = this.store.pipe(select('users'));
   }
 
   cancel() {

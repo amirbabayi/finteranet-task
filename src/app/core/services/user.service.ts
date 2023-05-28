@@ -9,7 +9,7 @@ export class UserService {
   constructor(private http: HttpClient) {
   }
 
-  get() {
+  getAllUsers() {
     return this.http.get('https://dummyjson.com/users');
   }
 }

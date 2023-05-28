@@ -1,5 +1,5 @@
 <div class="parent">
-  <div data-test="component-container" class="component-container" *ngIf="customers.length">
+  <div data-test="component-container" class="component-container">
     <ng-container>
       <div class="table-container">
         <table data-test="table-customer">
@@ -17,7 +17,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let item of customers">
+          <tr *ngFor="let item of customers.source.source.source._value.payload.users">
             <td>{{item?.firstName}}</td>
             <td>{{item?.lastName}}</td>
             <td>{{item?.age}}</td>

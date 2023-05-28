@@ -6,6 +6,10 @@ import {CustomersListComponent} from './component/customers-list/customers-list.
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {CoreModule} from "./core/core.module";
 import {HttpClientModule} from "@angular/common/http";
+import {userReducer} from "./store/reducers";
+import {StoreModule} from "@ngrx/store";
+import {EffectsModule} from "@ngrx/effects";
+import {UserEffects} from "./store/effects";
 
 @NgModule({
   declarations: [
@@ -17,10 +21,15 @@ import {HttpClientModule} from "@angular/common/http";
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    StoreModule.forRoot({payload: userReducer}),
+    EffectsModule.forRoot([UserEffects]),
+
+
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+
 })
 export class AppModule {
 }
